@@ -1,0 +1,43 @@
+<!DOCTYPE html>
+<html lang="vi">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Đang tải - AliSS</title>
+    <link rel="stylesheet" href="styles.css">
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/three.js/r128/three.min.js"></script>
+</head>
+<body>
+    <div id="scene-container"></div>
+    
+    <div class="loading-container">
+        <div class="loading-content">
+            <div class="loading-spinner">
+                <div class="spinner"></div>
+            </div>
+            <h1>Hệ thống AliSS</h1>
+            <div class="system-info">
+                <p>Phiên bản: v2.1.4</p>
+                <p>Trạng thái: Đang kết nối...</p>
+            </div>
+            <div class="progress-container">
+                <div class="progress-bar">
+                    <div class="progress"></div>
+                </div>
+                <div class="progress-text">0%</div>
+            </div>
+            <div class="status-container">
+                <p class="status">Đang khởi tạo hệ thống...</p>
+                <div class="steps">
+                    <div class="step active">Xác thực</div>
+                    <div class="step">Kết nối</div>
+                    <div class="step">Tải dữ liệu</div>
+                    <div class="step">Hoàn tất</div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <script src="loading.js"></script>
+</body>
+</html>

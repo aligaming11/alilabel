@@ -1,0 +1,119 @@
+<!DOCTYPE html>
+<html lang="vi">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Studio Lập Trình AliSS</title>
+    <link rel="stylesheet" href="styles.css">
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/three.js/r128/three.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/gsap/3.7.1/gsap.min.js"></script>
+    <!-- Google Platform Library -->
+    <script src="https://accounts.google.com/gsi/client" async defer></script>
+</head>
+<body>
+    <div id="scene-container"></div>
+    
+    <header>
+        <nav>
+            <div class="logo">AliSS</div>
+            <ul class="nav-links">
+                <!-- This will be shown only after login -->
+                <li id="access-link" style="display: none;">
+                    <a href="loading.html" target="_blank">Truy cập hệ thống</a>
+                </li>
+                <!-- Google Sign-In button -->
+                <li id="login-container">
+                    <div id="g_id_onload"
+                         data-client_id="242243256825-lknfu0kr2c1d8ej9tpolh9oafjsovomf.apps.googleusercontent.com"
+                         data-callback="handleCredentialResponse">
+                    </div>
+                    <div class="g_id_signin"
+                         data-type="standard"
+                         data-shape="rectangular"
+                         data-theme="outline"
+                         data-text="signin_with"
+                         data-size="large"
+                         data-logo_alignment="left"
+                         data-width="200">
+                    </div>
+                </li>
+            </ul>
+        </nav>
+    </header>
+
+    <main>
+        <section id="hero">
+            <div class="hero-content">
+                <h1>Chào Mừng Đến Với <span class="highlight">AliSS</span></h1>
+                <p>Studio Lập Trình Kiến Tạo Trải Nghiệm Số</p>
+                <!-- User info display (hidden by default) -->
+                <div id="user-info" style="display: none; margin-top: 30px;">
+                    <p>Xin chào, <span id="user-name"></span>!</p>
+                    <button id="logout-btn" class="access-btn">Đăng xuất</button>
+                </div>
+            </div>
+        </section>
+    </main>
+
+    <script src="script.js"></script>
+    <script>
+        // Google Authentication Handler
+        function handleCredentialResponse(response) {
+            // Decode JWT token to get user info
+            const responsePayload = parseJwt(response.credential);
+            
+            // Store user info in session storage
+            sessionStorage.setItem('user', JSON.stringify({
+                name: responsePayload.name,
+                email: responsePayload.email,
+                picture: responsePayload.picture
+            }));
+            
+            // Update UI
+            showUserLoggedIn(responsePayload);
+        }
+        
+        // Parse JWT token
+        function parseJwt(token) {
+            const base64Url = token.split('.')[1];
+            const base64 = base64Url.replace(/-/g, '+').replace(/_/g, '/');
+            const jsonPayload = decodeURIComponent(atob(base64).split('').map(function(c) {
+                return '%' + ('00' + c.charCodeAt(0).toString(16)).slice(-2);
+            }).join(''));
+            
+            return JSON.parse(jsonPayload);
+        }
+        
+        // Show user logged in state
+        function showUserLoggedIn(userInfo) {
+            // Hide login button
+            document.getElementById('login-container').style.display = 'none';
+            
+            // Show access link
+            document.getElementById('access-link').style.display = 'block';
+            
+            // Show user info
+            document.getElementById('user-name').textContent = userInfo.name;
+            document.getElementById('user-info').style.display = 'block';
+            
+            // Add logout functionality
+            document.getElementById('logout-btn').addEventListener('click', function() {
+                // Clear session storage
+                sessionStorage.removeItem('user');
+                
+                // Reload page to show login again
+                location.reload();
+            });
+        }
+        
+        // Check if user is already logged in
+        window.addEventListener('load', function() {
+            const user = sessionStorage.getItem('user');
+            if (user) {
+                const userInfo = JSON.parse(user);
+                showUserLoggedIn(userInfo);
+            }
+        });
+    </script>
+</body>
+</html>
